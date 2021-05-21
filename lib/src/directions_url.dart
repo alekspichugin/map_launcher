@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:map_launcher/src/models.dart';
 import 'package:map_launcher/src/utils.dart';
 
-Future<String> getMapDirectionsUrl({
+String getMapDirectionsUrl({
   required MapType mapType,
   required Coords destination,
   String? destinationTitle,
@@ -12,7 +12,7 @@ Future<String> getMapDirectionsUrl({
   DirectionsMode? directionsMode,
   List<Coords>? waypoints,
   Map<String, String>? extraParams,
-}) async {
+}) {
   switch (mapType) {
     case MapType.google:
       return Utils.buildUrl(
@@ -195,7 +195,7 @@ Future<String> getMapDirectionsUrl({
       final rsaKey = extraParams['rsaKey'];
       final client = extraParams['client'];
       final baseUrl = '$requestUrl&client=$client';
-      var resUrl = '$baseUrl&signature=${await Utils.getRSASignature(baseUrl, rsaKey!)}';
+      var resUrl = '$baseUrl&signature=${Utils.getRSASignature(baseUrl, rsaKey!)}';
       log('requestUrl $resUrl');
 
       return resUrl;

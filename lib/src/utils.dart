@@ -123,11 +123,10 @@ class Utils {
     }
   }
 
-  static Future<String> getRSASignature(String input, String rsaKey) async {
+  static String getRSASignature(String input, String rsaKey) {
     //final privateKey = await parseKeyFromFile<RSAPrivateKey>(certificateFilePath);
     final privateKey = RSAKeyParser().parse(rsaKey) as RSAPrivateKey;
     final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
-
     return signer.sign(input).base64;
   }
 }
