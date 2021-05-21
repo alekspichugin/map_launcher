@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:map_launcher/src/models.dart';
 import 'package:map_launcher/src/utils.dart';
@@ -168,10 +169,10 @@ String getMapDirectionsUrl({
 
     case MapType.yandexNavi: {
       final queryParams = {
-        'lat_to': '${destination.latitude}',
-        'lon_to': '${destination.longitude}',
         'lat_from': Utils.nullOrValue(origin, '${origin?.latitude}'),
         'lon_from': Utils.nullOrValue(origin, '${origin?.longitude}'),
+        'lat_to': '${destination.latitude}',
+        'lon_to': '${destination.longitude}',
       };
 
       if (waypoints != null && waypoints.isNotEmpty) {
@@ -195,6 +196,7 @@ String getMapDirectionsUrl({
       final client = extraParams['client'];
       final baseUrl = '$requestUrl&client=$client';
       var resUrl = '$baseUrl&signature=${Utils.getRSASignature(baseUrl, rsaKey!)}';
+      log('requestUrl $resUrl');
 
       return resUrl;
     }
