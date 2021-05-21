@@ -80,7 +80,7 @@ String getMapDirectionsUrl({
         url: 'baidumap://map/direction',
         queryParams: {
           'destination':
-              'name: ${destinationTitle ?? 'Destination'}|latlng:${destination.latitude},${destination.longitude}',
+          'name: ${destinationTitle ?? 'Destination'}|latlng:${destination.latitude},${destination.longitude}',
           'origin': Utils.nullOrValue(
             origin,
             'name: ${originTitle ?? 'Origin'}|latlng:${origin?.latitude},${origin?.longitude}',
@@ -130,21 +130,21 @@ String getMapDirectionsUrl({
       return 'osmand.navigation:q=${destination.latitude},${destination.longitude}';
 
     case MapType.mapswithme:
-      // Couldn't get //route to work properly as of 2020/07
-      // so just using the marker method for now
-      // return Utils.buildUrl(
-      //   url: 'mapsme://route',
-      //   queryParams: {
-      //     'dll': '${destination.latitude},${destination.longitude}',
-      //     'daddr': destinationTitle,
-      //     'sll': Utils.nullOrValue(
-      //       origin,
-      //       '${origin?.latitude},${origin?.longitude}',
-      //     ),
-      //     'saddr': originTitle,
-      //     'type': Utils.getMapsMeDirectionsMode(directionsMode),
-      //   },
-      // );
+    // Couldn't get //route to work properly as of 2020/07
+    // so just using the marker method for now
+    // return Utils.buildUrl(
+    //   url: 'mapsme://route',
+    //   queryParams: {
+    //     'dll': '${destination.latitude},${destination.longitude}',
+    //     'daddr': destinationTitle,
+    //     'sll': Utils.nullOrValue(
+    //       origin,
+    //       '${origin?.latitude},${origin?.longitude}',
+    //     ),
+    //     'saddr': originTitle,
+    //     'type': Utils.getMapsMeDirectionsMode(directionsMode),
+    //   },
+    // );
       return Utils.buildUrl(
         url: 'mapsme://map',
         queryParams: {
@@ -160,14 +160,14 @@ String getMapDirectionsUrl({
         url: 'yandexmaps://maps.yandex.com/',
         queryParams: {
           'rtext':
-              '${origin?.latitude},${origin?.longitude}~${destination.latitude},${destination.longitude}',
+          '${origin?.latitude},${origin?.longitude}~${destination.latitude},${destination.longitude}',
           'rtt': Utils.getYandexMapsDirectionsMode(directionsMode),
           ...(extraParams ?? {}),
         },
       );
 
-    case MapType.yandexNavi:
-      return Utils.buildUrl(
+    case MapType.yandexNavi: {
+      final requestUrl = Utils.buildUrl(
         url: 'yandexnavi://build_route_on_map',
         queryParams: {
           'lat_to': '${destination.latitude}',
@@ -177,10 +177,22 @@ String getMapDirectionsUrl({
         },
       );
 
+      if (extraParams == null
+          || extraParams['client'] == null
+          || extraParams['rsaKey'] == null
+      ) return requestUrl;
+
+      final rsaKey = extraParams['rsaKey'];
+      final baseUrl = '$requestUrl&client=007';
+      var resUrl = '$baseUrl&signature=${Utils.getRSASignature(baseUrl, rsaKey!)}';
+
+      return resUrl;
+    }
+
     case MapType.doubleGis:
       return Utils.buildUrl(
         url:
-            'dgis://2gis.ru/routeSearch/rsType/${Utils.getDoubleGisDirectionsMode(directionsMode)}/${origin == null ? '' : 'from/${origin.longitude},${origin.latitude}/'}to/${destination.longitude},${destination.latitude}',
+        'dgis://2gis.ru/routeSearch/rsType/${Utils.getDoubleGisDirectionsMode(directionsMode)}/${origin == null ? '' : 'from/${origin.longitude},${origin.latitude}/'}to/${destination.longitude},${destination.latitude}',
         queryParams: {
           ...(extraParams ?? {}),
         },
