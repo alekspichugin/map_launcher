@@ -167,14 +167,23 @@ String getMapDirectionsUrl({
       );
 
     case MapType.yandexNavi: {
+      final queryParams = {
+        'lat_to': '${destination.latitude}',
+        'lon_to': '${destination.longitude}',
+        'lat_from': Utils.nullOrValue(origin, '${origin?.latitude}'),
+        'lon_from': Utils.nullOrValue(origin, '${origin?.longitude}'),
+      };
+
+      if (waypoints != null && waypoints.isNotEmpty) {
+        for (int i=0; i<waypoints.length; ++i) {
+          queryParams['lat_via_$i'] = '${waypoints[i].latitude}';
+          queryParams['lon_via_$i'] = '${waypoints[i].longitude}';
+        }
+      }
+
       final requestUrl = Utils.buildUrl(
         url: 'yandexnavi://build_route_on_map',
-        queryParams: {
-          'lat_to': '${destination.latitude}',
-          'lon_to': '${destination.longitude}',
-          'lat_from': Utils.nullOrValue(origin, '${origin?.latitude}'),
-          'lon_from': Utils.nullOrValue(origin, '${origin?.longitude}'),
-        },
+        queryParams: queryParams,
       );
 
       if (extraParams == null
