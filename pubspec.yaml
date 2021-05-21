@@ -11,15 +11,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
   encrypt: ^5.0.0
 
   pointycastle: ^3.0.1
 
   asn1lib: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
