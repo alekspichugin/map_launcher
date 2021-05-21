@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
+import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:map_launcher/src/models.dart';
 
@@ -125,9 +126,19 @@ class Utils {
 
   static String getRSASignature(String input, String rsaKey) {
     //final privateKey = await parseKeyFromFile<RSAPrivateKey>(certificateFilePath);
-    final privateKey = RSAKeyParser().parse(rsaKey) as RSAPrivateKey;
-    final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
-    return signer.sign(input).base64;
+    //final privateKey = RSAKeyParser().parse(rsaKey) as RSAPrivateKey;
+    //final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
+    //return signer.sign(input).base64;
+
+    //var bytes1 = utf8.encode(input);         // data being hashed
+    //var digest1 = sha256.convert(bytes1);
+
+    var encodedKey = utf8.encode(rsaKey); // signature=encryption key
+    var hmacSha256 = new Hmac(sha256, encodedKey); // HMAC-SHA256 with key
+    var bytesDataIn = utf8.encode(input);
+    var digest = hmacSha256.convert(bytesDataIn);  // encrypt target data
+    String singedValue = digest.toString();
+    return singedValue;
   }
 }
 
