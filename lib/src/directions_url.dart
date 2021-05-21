@@ -192,7 +192,8 @@ String getMapDirectionsUrl({
       ) return requestUrl;
 
       final rsaKey = extraParams['rsaKey'];
-      final baseUrl = '$requestUrl&client=007';
+      final client = extraParams['client'];
+      final baseUrl = '$requestUrl&client=$client';
       var resUrl = '$baseUrl&signature=${Utils.getRSASignature(baseUrl, rsaKey!)}';
 
       return resUrl;
