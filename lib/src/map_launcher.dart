@@ -69,7 +69,7 @@ class MapLauncher {
     DirectionsMode? directionsMode = DirectionsMode.driving,
     Map<String, String>? extraParams,
   }) async {
-    final url = getMapDirectionsUrl(
+    final url = await getMapDirectionsUrl(
       mapType: mapType,
       destination: destination,
       destinationTitle: destinationTitle,

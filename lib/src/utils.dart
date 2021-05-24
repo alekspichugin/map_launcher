@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
 import 'package:map_launcher/src/models.dart';
 import 'package:pointycastle/export.dart';
+import 'package:yandex_sign/yandex_sign.dart';
 
 class Utils {
   static String? enumToString(o) {
@@ -121,19 +123,31 @@ class Utils {
     }
   }
 
-  static String getRSASignature(String input, String rsaKey) {
+  static Future<String> getRSASignature(String input, String rsaKey) async {
     //final privateKey = await parseKeyFromFile<RSAPrivateKey>(certificateFilePath);
     //final privateKey = RSAKeyParser().parse(rsaKey) as RSAPrivateKey;
     //final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
     //return signer.sign(input).base64;
 
+    /*Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String decoded = stringToBase64.decode(rsaKey);
+
     var signer = RSASigner(SHA256Digest(), "0609608648016503040201");
     final privateKey = RSAKeyParser().parse(rsaKey) as RSAPrivateKey;
     signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
-    return  base64Encode(signer.generateSignature(Uint8List.fromList(input.codeUnits)).bytes);
+    return  base64Encode(signer.generateSignature(Uint8List.fromList(input.codeUnits)).bytes);*/
+    var signUrl = input;
+    try {
+      signUrl = await YandexSign.getSignUrl(input, rsaKey, 'ewfds');
+      log('OLOLO signUrl --> $signUrl');
+    } catch(e) {
+      log(e.toString());
+    }
+    return signUrl;
   }
 }
 
+/*
 /// RSA PEM parser.
 class RSAKeyParser {
   /// Parses the PEM key no matter it is public or private, it will figure it out.
@@ -205,3 +219,4 @@ class RSAKeyParser {
     return parser.nextObject() as ASN1Sequence;
   }
 }
+ */
