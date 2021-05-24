@@ -73,6 +73,17 @@ class AvailableMap {
     );
   }
 
+  Future<void> showYandexDirections({
+    DirectionsMode directionsMode = DirectionsMode.driving,
+    required String url
+  }) {
+    return MapLauncher.showYandexDirections(
+      url: url,
+      mapType: mapType,
+      directionsMode: directionsMode,
+    );
+  }
+
   Future<void> showDirections({
     required Coords destination,
     String? destinationTitle,

@@ -59,6 +59,19 @@ class MapLauncher {
     return _channel.invokeMethod('showMarker', args);
   }
 
+  static Future<dynamic> showYandexDirections({
+    required MapType mapType,
+    DirectionsMode? directionsMode = DirectionsMode.driving,
+    required String url
+  }) {
+    final Map<String, String?> args = {
+      'mapType': Utils.enumToString(mapType),
+      'url': Uri.encodeFull(url),
+      'directionsMode': Utils.enumToString(directionsMode),
+    };
+    return _channel.invokeMethod('showDirections', args);
+  }
+
   static Future<dynamic> showDirections({
     required MapType mapType,
     required Coords destination,
