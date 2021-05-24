@@ -124,21 +124,11 @@ class Utils {
     }
   }
 
-  static Future<String> getRSASignature(String input, String key) async {
+  static String getRSASignature(String input, String key) {
     final privateKey = RSAKeyParser().parse(key) as RSAPrivateKey;
 
     final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
     log('OLOLO RSAKeyParser ${Uri.encodeComponent(signer.sign(input).base64)}');
-
-
-    try {
-      final iosNameOfDerFile = 'key';
-      var signUrl = await YandexSign.getSignUrl(input, key, iosNameOfDerFile);
-      log('OLOLO YandexSign $signUrl');
-      return signUrl;
-    } catch(e) {
-      log(e.toString());
-    }
 
     return Uri.encodeComponent(signer.sign(input).base64);
   }

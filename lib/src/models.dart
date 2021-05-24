@@ -73,29 +73,6 @@ class AvailableMap {
     );
   }
 
-  Future<void> showYandexDirections({
-    required Coords destination,
-    String? destinationTitle,
-    Coords? origin,
-    String? originTitle,
-    DirectionsMode directionsMode = DirectionsMode.driving,
-    List<Coords>? waypoints,
-    Map<String, String>? extraParams,
-    required String url
-  }) {
-    return MapLauncher.showYandexDirections(
-      url: url,
-      mapType: mapType,
-      destination: destination,
-      destinationTitle: destinationTitle,
-      origin: origin,
-      originTitle: originTitle,
-      waypoints: waypoints,
-      directionsMode: directionsMode,
-      extraParams: extraParams,
-    );
-  }
-
   Future<void> showDirections({
     required Coords destination,
     String? destinationTitle,
