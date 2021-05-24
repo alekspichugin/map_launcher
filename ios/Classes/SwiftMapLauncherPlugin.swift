@@ -129,12 +129,64 @@ private func showDirections(mapType: MapType, url: String, destinationTitle: Str
             with: [originMapItem, destinationMapItem],
             launchOptions: [MKLaunchOptionsDirectionsModeKey: getDirectionsMode(directionsMode: directionsMode)]
         )
+    case MapType.apple:
+        buildRoute()
     default:
         UIApplication.shared.openURL(URL(string:url)!)
 
     }
 }
 
+  func signString(string: String, key: SecKey) -> String {
+    let messageData = string.data(using:String.Encoding.utf8)!
+    var hash = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
+
+     _ = hash.withUnsafeMutableBytes {digestBytes in
+      messageData.withUnsafeBytes {messageBytes in
+        CC_SHA256(messageBytes, CC_LONG(messageData.count), digestBytes)
+      }
+    }
+
+    let signature = SecKeyCreateSignature(key,
+      SecKeyAlgorithm.rsaSignatureDigestPKCS1v15SHA256,
+      hash as CFData,
+      nil) as Data?
+
+    return (signature?.base64EncodedString())!
+  }
+
+  func loadCert() -> SecKey {
+    let certificateData = NSData(
+      contentsOf:Bundle.main.url(forResource: "private_key", withExtension: "der")!
+    )
+
+    let options: [String: Any] =
+      [kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+      kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
+      kSecAttrKeySizeInBits as String: 512]
+
+    let key = SecKeyCreateWithData(certificateData!,
+      options as CFDictionary,
+      nil)
+
+    return key!
+  }
+
+  func buildRoute() {
+      var compoments = URLComponents(string: "yandexnavi://build_route_on_map")!
+      compoments.queryItems = [
+          URLQueryItem(name: "lat_to", value: "55.74"),
+          URLQueryItem(name: "lon_to", value: "37.64"),
+          URLQueryItem(name: "client", value: "317")
+      ]
+
+      let signature = signString(string: compoments.string!, key: loadCert())
+      let final = compoments.string!.appending(
+          "&signature=" + signature.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+      )
+
+      UIApplication.shared.open(URL(string: final)!)
+  }
 
 private func isMapAvailable(map: Map) -> Bool {
     if map.mapType == MapType.apple {
