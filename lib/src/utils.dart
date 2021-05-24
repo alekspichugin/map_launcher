@@ -6,6 +6,7 @@ import 'package:asn1lib/asn1lib.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:map_launcher/src/models.dart';
 import 'package:pointycastle/asymmetric/api.dart';
+import 'package:yandex_sign/yandex_sign.dart';
 
 class Utils {
   static String? enumToString(o) {
@@ -123,10 +124,21 @@ class Utils {
     }
   }
 
-  static String getRSASignature(String input, String key) {
+  static Future<String> getRSASignature(String input, String key) async {
     final privateKey = RSAKeyParser().parse(key) as RSAPrivateKey;
 
     final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
+    log('OLOLO RSAKeyParser ${Uri.encodeComponent(signer.sign(input).base64)}');
+
+
+    try {
+      final iosNameOfDerFile = 'key';
+      var signUrl = await YandexSign.getSignUrl(input, key, iosNameOfDerFile);
+      log('OLOLO YandexSign $signUrl');
+      return signUrl;
+    } catch(e) {
+      log(e.toString());
+    }
 
     return Uri.encodeComponent(signer.sign(input).base64);
   }
