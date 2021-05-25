@@ -11,7 +11,7 @@ String getRSASignature(String input, String key) {
 
   final signer = Signer(RSASigner(RSASignDigest.SHA256, privateKey: privateKey));
 
-  return Platform.isAndroid ? Uri.encodeComponent(signer.sign(input).base64) : signer.sign(input).base64;
+  return Uri.encodeComponent(signer.sign(input).base64);
 }
 
 /// RSA PEM parser.
