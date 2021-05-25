@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:map_launcher/src/directions_url.dart';
@@ -80,6 +81,7 @@ class MapLauncher {
       extraParams: extraParams,
     );
 
+    log('showDirections url: $url');
     final Map<String, String?> args = {
       'mapType': Utils.enumToString(mapType),
       'url': url, //Uri.encodeFull(url),
