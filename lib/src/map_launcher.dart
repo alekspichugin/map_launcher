@@ -82,7 +82,7 @@ class MapLauncher {
 
     final Map<String, String?> args = {
       'mapType': Utils.enumToString(mapType),
-      'url': Uri.encodeFull(url),
+      'url': url, //Uri.encodeFull(url),
       'destinationTitle': destinationTitle,
       'destinationLatitude': destination.latitude.toString(),
       'destinationLongitude': destination.longitude.toString(),
