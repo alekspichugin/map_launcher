@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:map_launcher/src/models.dart';
 import 'package:map_launcher/src/utils.dart';
+import 'package:map_launcher/src/yandex_navi_sign_encrypt.dart';
 
 String getMapDirectionsUrl({
   required MapType mapType,
@@ -195,7 +196,7 @@ String getMapDirectionsUrl({
       final rsaKey = extraParams['rsaKey'];
       final client = extraParams['client'];
       final baseUrl = '$requestUrl&client=$client';
-      var resUrl = '$baseUrl&signature=${Utils.getRSASignature(baseUrl, rsaKey!)}';
+      var resUrl = '$baseUrl&signature=${getRSASignature(baseUrl, rsaKey!)}';
       log('requestUrl $resUrl');
 
       return resUrl;
